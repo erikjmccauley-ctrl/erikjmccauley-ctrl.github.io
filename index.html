@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Erik J. McCauley — Security Engineer</title>
+<title>Erik J. McCauley — AWS Cloud Engineer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --green: #00c853;
@@ -20,10 +20,11 @@
     --mono: 'DM Mono', monospace;
     --sans: 'Syne', sans-serif;
     --body: 'Inter', sans-serif;
+    --nav-height: 64px;
+    --banner-height: 40px;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
 
   body {
@@ -35,52 +36,58 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ─── BANNER ─── */
+  /* ── BANNER ── */
   .banner {
     background: var(--green);
     color: #0d1117;
     text-align: center;
-    padding: 10px 24px;
+    padding: 0 24px;
+    height: var(--banner-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: var(--mono);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 200;
   }
   .banner .dot {
     display: inline-block;
     width: 7px; height: 7px;
     background: #0d1117;
     border-radius: 50%;
-    margin-right: 8px;
+    margin-right: 10px;
     vertical-align: middle;
     animation: pulse 1.6s ease-in-out infinite;
   }
   @keyframes pulse {
     0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.7); }
+    50% { opacity: 0.45; transform: scale(0.65); }
   }
 
-  /* ─── NAV ─── */
+  /* ── NAV ── */
   nav {
+    height: var(--nav-height);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 60px;
+    padding: 0 60px;
     border-bottom: 1px solid var(--border-dim);
     position: sticky;
-    top: 37px;
-    background: rgba(13, 17, 23, 0.92);
-    backdrop-filter: blur(12px);
-    z-index: 99;
+    top: var(--banner-height);
+    background: rgba(13, 17, 23, 0.94);
+    backdrop-filter: blur(14px);
+    z-index: 100;
   }
   .nav-logo {
     font-family: var(--mono);
     font-size: 13px;
     color: var(--green);
     letter-spacing: 0.08em;
+    white-space: nowrap;
   }
   .nav-links {
     display: flex;
@@ -90,19 +97,85 @@
   .nav-links a {
     color: var(--muted);
     text-decoration: none;
-    font-size: 13px;
+    font-size: 12px;
     font-family: var(--mono);
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     transition: color 0.2s;
   }
   .nav-links a:hover { color: var(--green); }
 
-  /* ─── HERO ─── */
-  .hero {
-    padding: 100px 60px 80px;
+  /* hamburger */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+    background: none;
+    border: none;
+  }
+  .nav-toggle span {
+    display: block;
+    width: 22px; height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: transform 0.25s, opacity 0.25s;
+  }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* mobile drawer */
+  .nav-drawer {
+    display: none;
+    position: fixed;
+    top: calc(var(--banner-height) + var(--nav-height));
+    left: 0; right: 0;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border-dim);
+    z-index: 99;
+    padding: 24px;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .nav-drawer.open { display: flex; }
+  .nav-drawer a {
+    color: var(--muted);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-dim);
+    transition: color 0.2s;
+  }
+  .nav-drawer a:last-child { border-bottom: none; }
+  .nav-drawer a:hover { color: var(--green); }
+
+  /* ── LAYOUT WRAPPER ── */
+  .container {
     max-width: 1100px;
     margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 100px 0 80px;
     position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    top: 0; right: -60px;
+    width: 55%; height: 100%;
+    background-image:
+      linear-gradient(rgba(0,200,83,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,83,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    mask-image: linear-gradient(to left, rgba(0,0,0,0.6), transparent);
+    -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.6), transparent);
   }
   .hero-label {
     font-family: var(--mono);
@@ -126,7 +199,7 @@
   }
   .hero-sub {
     font-family: var(--mono);
-    font-size: 14px;
+    font-size: 13px;
     color: var(--green);
     margin-bottom: 32px;
     letter-spacing: 0.05em;
@@ -134,111 +207,98 @@
   .hero-copy {
     font-size: 18px;
     color: #c9d1d9;
-    max-width: 620px;
+    max-width: 600px;
     line-height: 1.75;
     margin-bottom: 48px;
     font-weight: 300;
   }
-  .hero-copy strong {
-    color: var(--text);
-    font-weight: 500;
-  }
+  .hero-copy strong { color: var(--text); font-weight: 500; }
   .cta-group {
     display: flex;
-    gap: 16px;
+    gap: 14px;
     flex-wrap: wrap;
   }
   .btn-primary {
     background: var(--green);
     color: #0d1117;
-    padding: 14px 32px;
+    padding: 13px 28px;
     border-radius: 4px;
     font-family: var(--mono);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
     text-decoration: none;
     letter-spacing: 0.05em;
     transition: background 0.2s, transform 0.1s;
-    display: inline-block;
   }
   .btn-primary:hover { background: var(--green-dim); transform: translateY(-1px); }
   .btn-secondary {
     border: 1px solid rgba(255,255,255,0.15);
     color: var(--text);
-    padding: 14px 32px;
+    padding: 13px 28px;
     border-radius: 4px;
     font-family: var(--mono);
-    font-size: 13px;
+    font-size: 12px;
     text-decoration: none;
     letter-spacing: 0.05em;
-    transition: border-color 0.2s, transform 0.1s;
-    display: inline-block;
+    transition: border-color 0.2s, color 0.2s, transform 0.1s;
   }
   .btn-secondary:hover { border-color: var(--green); color: var(--green); transform: translateY(-1px); }
 
-  /* ─── TERMINAL CALLOUT ─── */
-  .terminal-strip {
+  /* ── STATS STRIP ── */
+  .stats-strip {
     background: var(--bg2);
     border-top: 1px solid var(--border-dim);
     border-bottom: 1px solid var(--border-dim);
-    padding: 28px 60px;
-    overflow: hidden;
+    padding: 40px 0;
   }
-  .terminal-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    gap: 40px;
-    align-items: center;
-    flex-wrap: wrap;
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
   }
-  .t-stat {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  .stat-item {
+    padding: 0 24px;
+    border-right: 1px solid var(--border-dim);
   }
-  .t-stat-num {
+  .stat-item:first-child { padding-left: 0; }
+  .stat-item:last-child { border-right: none; padding-right: 0; }
+  .stat-num {
     font-family: var(--sans);
-    font-size: 36px;
+    font-size: 32px;
     font-weight: 700;
     color: var(--green);
     line-height: 1;
+    margin-bottom: 6px;
   }
-  .t-stat-label {
+  .stat-label {
     font-family: var(--mono);
     font-size: 11px;
     color: var(--muted);
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
-  .t-divider {
-    width: 1px;
-    height: 48px;
-    background: var(--border-dim);
-  }
 
-  /* ─── CREDIBILITY STRIP ─── */
-  .cred-strip {
-    padding: 40px 60px;
-    max-width: 1100px;
-    margin: 0 auto;
+  /* ── PILLS STRIP ── */
+  .pills-strip {
+    padding: 36px 0;
+    border-bottom: 1px solid var(--border-dim);
   }
-  .cred-label {
+  .pills-label {
     font-family: var(--mono);
     font-size: 11px;
     color: var(--muted);
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
-  .cred-items {
+  .pills {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
   }
-  .cred-pill {
+  .pill {
     border: 1px solid var(--border-dim);
-    padding: 6px 16px;
+    padding: 5px 14px;
     border-radius: 100px;
     font-family: var(--mono);
     font-size: 12px;
@@ -246,17 +306,20 @@
     letter-spacing: 0.04em;
     transition: border-color 0.2s, color 0.2s;
   }
-  .cred-pill:hover { border-color: var(--green); color: var(--green); }
-  .cred-pill.highlight {
-    border-color: rgba(0, 200, 83, 0.4);
+  .pill:hover { border-color: var(--green); color: var(--green); }
+  .pill.hi {
+    border-color: rgba(0, 200, 83, 0.35);
     color: var(--green);
   }
 
-  /* ─── SECTION BASE ─── */
-  section {
-    padding: 80px 60px;
-    max-width: 1100px;
-    margin: 0 auto;
+  /* ── SECTIONS ── */
+  .section {
+    padding: 80px 0;
+  }
+  .section-alt {
+    background: var(--bg2);
+    border-top: 1px solid var(--border-dim);
+    border-bottom: 1px solid var(--border-dim);
   }
   .section-label {
     font-family: var(--mono);
@@ -268,29 +331,25 @@
   }
   .section-title {
     font-family: var(--sans);
-    font-size: clamp(28px, 4vw, 44px);
+    font-size: clamp(26px, 4vw, 42px);
     font-weight: 700;
     line-height: 1.15;
     letter-spacing: -0.02em;
-    margin-bottom: 24px;
+    margin-bottom: 40px;
   }
 
-  /* ─── ABOUT ─── */
+  /* ── ABOUT ── */
   .about-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    gap: 56px;
     align-items: start;
   }
-  .about-copy {
-    color: #c9d1d9;
-    font-weight: 300;
-    font-size: 16px;
-  }
-  .about-copy p { margin-bottom: 16px; }
+  .about-copy { color: #c9d1d9; font-weight: 300; }
+  .about-copy p { margin-bottom: 16px; font-size: 15px; }
   .about-copy strong { color: var(--text); font-weight: 500; }
   .origin-card {
-    background: var(--bg2);
+    background: var(--bg3);
     border: 1px solid var(--border-dim);
     border-radius: 8px;
     padding: 28px;
@@ -310,20 +369,21 @@
     color: var(--green);
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
   }
   .origin-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
   }
   .origin-list li {
-    font-size: 14px;
+    font-size: 13px;
     color: #c9d1d9;
     padding-left: 20px;
     position: relative;
     font-weight: 300;
+    line-height: 1.55;
   }
   .origin-list li::before {
     content: '→';
@@ -333,51 +393,48 @@
     font-family: var(--mono);
     font-size: 12px;
   }
+  .origin-list li strong { color: var(--text); font-weight: 500; }
 
-  /* ─── CAPABILITIES ─── */
-  .caps-section {
-    background: var(--bg2);
-    border-top: 1px solid var(--border-dim);
-    border-bottom: 1px solid var(--border-dim);
-  }
+  /* ── CAPABILITIES ── */
   .caps-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+    gap: 20px;
   }
   .cap-card {
     background: var(--bg3);
     border: 1px solid var(--border-dim);
     border-radius: 8px;
-    padding: 32px 28px;
+    padding: 28px 24px;
     transition: border-color 0.2s;
   }
   .cap-card:hover { border-color: rgba(0, 200, 83, 0.3); }
   .cap-icon {
-    width: 36px; height: 36px;
+    width: 34px; height: 34px;
     border: 1px solid rgba(0, 200, 83, 0.3);
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
-    font-size: 16px;
+    margin-bottom: 18px;
+    font-size: 15px;
   }
   .cap-title {
     font-family: var(--sans);
-    font-size: 17px;
-    font-weight: 600;
-    margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 10px;
     color: var(--text);
+    line-height: 1.25;
   }
   .cap-desc {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--muted);
     line-height: 1.65;
     font-weight: 300;
+    margin-bottom: 16px;
   }
-  .cap-tools {
-    margin-top: 16px;
+  .tool-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
@@ -386,43 +443,43 @@
     font-family: var(--mono);
     font-size: 11px;
     color: var(--green);
-    background: rgba(0, 200, 83, 0.08);
+    background: rgba(0, 200, 83, 0.07);
     border: 1px solid rgba(0, 200, 83, 0.2);
-    padding: 3px 10px;
+    padding: 3px 9px;
     border-radius: 3px;
   }
 
-  /* ─── PROJECTS ─── */
+  /* ── PROJECTS ── */
   .projects-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px;
+    gap: 20px;
   }
   .project-card {
     background: var(--bg2);
     border: 1px solid var(--border-dim);
     border-radius: 8px;
-    padding: 36px 32px;
+    padding: 32px 28px;
     text-decoration: none;
     color: inherit;
     display: block;
     transition: border-color 0.2s, transform 0.15s;
     position: relative;
-    overflow: hidden;
   }
-  .project-card::after {
+  .project-card.clickable { cursor: pointer; }
+  .project-card.clickable::after {
     content: '↗';
     position: absolute;
-    top: 28px; right: 28px;
-    font-size: 18px;
+    top: 24px; right: 24px;
+    font-size: 17px;
     color: var(--muted);
     transition: color 0.2s, transform 0.2s;
   }
-  .project-card:hover {
+  .project-card.clickable:hover {
     border-color: rgba(0, 200, 83, 0.3);
     transform: translateY(-2px);
   }
-  .project-card:hover::after {
+  .project-card.clickable:hover::after {
     color: var(--green);
     transform: translate(2px, -2px);
   }
@@ -432,24 +489,24 @@
     color: var(--green);
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
   .project-title {
     font-family: var(--sans);
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 700;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     line-height: 1.2;
-    padding-right: 32px;
+    padding-right: 28px;
   }
   .project-desc {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--muted);
     line-height: 1.65;
     font-weight: 300;
+    margin-bottom: 16px;
   }
   .project-bullets {
-    margin-top: 16px;
     list-style: none;
     display: flex;
     flex-direction: column;
@@ -460,6 +517,7 @@
     color: #8b949e;
     padding-left: 16px;
     position: relative;
+    line-height: 1.5;
   }
   .project-bullets li::before {
     content: '·';
@@ -469,10 +527,12 @@
     font-weight: 700;
   }
 
-  /* ─── TARGET ROLES ─── */
-  .roles-section { background: var(--bg2); border-top: 1px solid var(--border-dim); border-bottom: 1px solid var(--border-dim); }
-  .roles-inner { display: flex; gap: 60px; align-items: flex-start; flex-wrap: wrap; }
-  .roles-col { flex: 1; min-width: 220px; }
+  /* ── ROLES ── */
+  .roles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
   .roles-col-label {
     font-family: var(--mono);
     font-size: 11px;
@@ -485,78 +545,91 @@
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
   .roles-list li {
-    font-size: 15px;
+    font-size: 14px;
     color: #c9d1d9;
     font-family: var(--mono);
-    padding: 10px 16px;
+    padding: 10px 14px;
     background: var(--bg3);
     border: 1px solid var(--border-dim);
     border-radius: 4px;
     transition: border-color 0.2s;
+    line-height: 1.4;
   }
   .roles-list li:hover { border-color: rgba(0, 200, 83, 0.3); }
-  .roles-list li span { color: var(--green); }
+  .roles-list li span { color: var(--green); margin-right: 6px; }
 
-  /* ─── CTA ─── */
+  /* ── DUAL CTA ── */
   .cta-section {
-    text-align: center;
-    padding: 100px 60px;
-    max-width: 700px;
-    margin: 0 auto;
+    padding: 100px 0;
   }
-  .cta-label {
+  .cta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 56px;
+  }
+  .cta-card {
+    background: var(--bg2);
+    border: 1px solid var(--border-dim);
+    border-radius: 8px;
+    padding: 36px 32px;
+  }
+  .cta-card.primary-card {
+    border-color: rgba(0, 200, 83, 0.25);
+    background: rgba(0, 200, 83, 0.04);
+  }
+  .cta-card-label {
     font-family: var(--mono);
-    font-size: 12px;
+    font-size: 11px;
     color: var(--green);
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
   }
-  .cta-section h2 {
+  .cta-card h3 {
     font-family: var(--sans);
-    font-size: clamp(32px, 5vw, 52px);
+    font-size: 22px;
     font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
+    line-height: 1.2;
   }
-  .cta-section p {
+  .cta-card p {
+    font-size: 14px;
     color: var(--muted);
-    font-size: 16px;
-    margin-bottom: 40px;
     font-weight: 300;
+    margin-bottom: 24px;
+    line-height: 1.65;
   }
   .contact-links {
     display: flex;
-    gap: 16px;
-    justify-content: center;
+    gap: 12px;
     flex-wrap: wrap;
   }
   .contact-link {
     border: 1px solid var(--border-dim);
-    padding: 12px 24px;
+    padding: 11px 22px;
     border-radius: 4px;
     font-family: var(--mono);
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text);
     text-decoration: none;
     letter-spacing: 0.04em;
     transition: border-color 0.2s, color 0.2s;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
   }
   .contact-link:hover { border-color: var(--green); color: var(--green); }
-  .contact-link.primary { background: var(--green); color: #0d1117; border-color: var(--green); }
-  .contact-link.primary:hover { background: var(--green-dim); }
+  .contact-link.green { background: var(--green); color: #0d1117; border-color: var(--green); }
+  .contact-link.green:hover { background: var(--green-dim); }
 
-  /* ─── FOOTER ─── */
+  /* ── FOOTER ── */
   footer {
     border-top: 1px solid var(--border-dim);
-    padding: 32px 60px;
+    padding: 28px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -564,32 +637,54 @@
     font-size: 12px;
     color: var(--muted);
   }
-  footer a { color: var(--muted); text-decoration: none; }
+  footer a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
   footer a:hover { color: var(--green); }
+  .footer-links { display: flex; gap: 24px; }
 
-  /* ─── GRID BG ─── */
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: 0; right: -60px;
-    width: 55%;
-    height: 100%;
-    background-image:
-      linear-gradient(rgba(0,200,83,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,200,83,0.04) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    mask-image: linear-gradient(to left, rgba(0,0,0,0.6), transparent);
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .container { padding: 0 32px; }
+
+    nav { padding: 0 32px; }
+    .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+
+    .hero { padding: 64px 0 56px; }
+
+    .stats-grid {
+      grid-template-columns: repeat(3, 1fr);
+      row-gap: 32px;
+    }
+    .stat-item {
+      border-right: none;
+      padding: 0;
+    }
+    .stat-item:nth-child(1),
+    .stat-item:nth-child(2) {
+      border-right: 1px solid var(--border-dim);
+      padding-right: 16px;
+    }
+
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .caps-grid { grid-template-columns: 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .roles-grid { grid-template-columns: 1fr; gap: 28px; }
+    .cta-grid { grid-template-columns: 1fr; }
+
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    .footer-links { justify-content: center; }
   }
 
-  /* ─── RESPONSIVE ─── */
-  @media (max-width: 768px) {
-    nav, .hero, section, .terminal-strip, footer { padding-left: 24px; padding-right: 24px; }
-    .hero { padding-top: 60px; }
-    .about-grid, .caps-grid, .projects-grid { grid-template-columns: 1fr; }
-    .roles-inner { flex-direction: column; gap: 32px; }
-    nav { padding: 16px 24px; }
-    .nav-links { display: none; }
+  @media (max-width: 600px) {
+    .container { padding: 0 20px; }
+    nav { padding: 0 20px; }
+    .banner { font-size: 11px; padding: 0 16px; text-align: left; justify-content: flex-start; }
+    .section { padding: 56px 0; }
+    .cta-section { padding: 64px 0; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .stat-item:nth-child(2) { border-right: none; }
+    .stat-item:nth-child(1) { border-right: 1px solid var(--border-dim); }
+    .hero-copy { font-size: 16px; }
   }
 </style>
 </head>
@@ -598,258 +693,317 @@
 <!-- BANNER -->
 <div class="banner">
   <span class="dot"></span>
-  Available for immediate placement — Remote Cybersecurity Roles · $120K+ Target
+  Available for remote AWS Cloud Engineering roles · AI-Enabled Infrastructure · $120K+
 </div>
 
 <!-- NAV -->
 <nav>
-  <span class="nav-logo">EJM // Security Engineer</span>
+  <span class="nav-logo">EJM // Cloud Engineer</span>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#capabilities">Capabilities</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE DRAWER -->
+<div class="nav-drawer" id="navDrawer">
+  <a href="#about" class="drawer-link">About</a>
+  <a href="#capabilities" class="drawer-link">Capabilities</a>
+  <a href="#projects" class="drawer-link">Projects</a>
+  <a href="#contact" class="drawer-link">Contact</a>
+</div>
 
 <!-- HERO -->
 <div class="hero">
-  <p class="hero-label">// Security Remediation Engineer · 9 Years Enterprise Experience</p>
-  <h1>Erik J.<br>McCauley</h1>
-  <p class="hero-sub">CrowdStrike · Intune · Tenable · Defender · Azure AD · PowerShell</p>
-  <p class="hero-copy">
-    I close vulnerabilities, harden endpoints, and automate the things that slow security teams down.
-    Done it at scale — <strong>13,000 endpoints, 9,000+ users, HIPAA-regulated</strong>.
-    Not a checkbox engineer. The kind who builds the lab to understand what they're defending.
-  </p>
-  <div class="cta-group">
-    <a href="#contact" class="btn-primary">→ Let's Talk</a>
-    <a href="https://github.com/erikjmccauley-ctrl/enterprise-it-automation-scripts" target="_blank" class="btn-secondary">View GitHub</a>
+  <div class="hero-bg"></div>
+  <div class="container">
+    <p class="hero-label">// AWS Cloud Engineer · Terraform IaC · ECS · Secure-by-Design</p>
+    <h1>Erik J.<br>McCauley</h1>
+    <p class="hero-sub">AWS · Terraform · ECS Fargate · IAM · KMS · CloudWatch · GitHub Actions</p>
+    <p class="hero-copy">
+      I design and deploy <strong>production-safe AWS infrastructure</strong> using Terraform, ECS, and secure-by-design principles.
+      Built for reliability, cost control, and operational simplicity — at $74/month.
+      This is not a demo environment. It is live.
+    </p>
+    <div class="cta-group">
+      <a href="#contact" class="btn-primary">→ Let's Talk</a>
+      <a href="https://github.com/erikjmccauley-ctrl/AWS-Small-Business-Secure-Stack" target="_blank" class="btn-secondary">View GitHub ↗</a>
+    </div>
   </div>
 </div>
 
 <!-- STATS STRIP -->
-<div class="terminal-strip">
-  <div class="terminal-inner">
-    <div class="t-stat">
-      <span class="t-stat-num">9+</span>
-      <span class="t-stat-label">Years Enterprise IT</span>
-    </div>
-    <div class="t-divider"></div>
-    <div class="t-stat">
-      <span class="t-stat-num">13K</span>
-      <span class="t-stat-label">Endpoints Managed</span>
-    </div>
-    <div class="t-divider"></div>
-    <div class="t-stat">
-      <span class="t-stat-num">SANS</span>
-      <span class="t-stat-label">ICS310 · March 2026</span>
-    </div>
-    <div class="t-divider"></div>
-    <div class="t-stat">
-      <span class="t-stat-num">HIPAA</span>
-      <span class="t-stat-label">Regulated Environment</span>
-    </div>
-    <div class="t-divider"></div>
-    <div class="t-stat">
-      <span class="t-stat-num">Stanford</span>
-      <span class="t-stat-label">ML Certified</span>
+<div class="stats-strip">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num">18+</div>
+        <div class="stat-label">Terraform Modules</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">$74</div>
+        <div class="stat-label">Per Month · Live Stack</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">9+</div>
+        <div class="stat-label">Years Enterprise IT</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">13K</div>
+        <div class="stat-label">Endpoints · HIPAA Env</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">AI</div>
+        <div class="stat-label">Operator Workflow</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- CREDIBILITY STRIP -->
-<div style="padding: 40px 60px; border-bottom: 1px solid var(--border-dim);">
-  <div class="cred-strip" style="padding: 0; max-width: 1100px; margin: 0 auto;">
-    <p class="cred-label">Background / Worked With</p>
-    <div class="cred-items">
-      <span class="cred-pill highlight">McLeod Health</span>
-      <span class="cred-pill highlight">Blue Cross Blue Shield Assoc.</span>
-      <span class="cred-pill">Fordham University</span>
-      <span class="cred-pill highlight">CrowdStrike Falcon</span>
-      <span class="cred-pill highlight">Microsoft Intune</span>
-      <span class="cred-pill highlight">Tenable / Nessus</span>
-      <span class="cred-pill">MECM / SCCM</span>
-      <span class="cred-pill">Microsoft Defender</span>
-      <span class="cred-pill">ServiceNow</span>
-      <span class="cred-pill highlight">Azure AD / Entra ID</span>
-      <span class="cred-pill">Mason Frank International (NYC)</span>
-      <span class="cred-pill">Stanford ML Certification</span>
-      <span class="cred-pill highlight">SANS ICS310</span>
+<!-- PILLS -->
+<div class="container">
+  <div class="pills-strip">
+    <p class="pills-label">Stack &amp; Background</p>
+    <div class="pills">
+      <span class="pill hi">AWS</span>
+      <span class="pill hi">Terraform</span>
+      <span class="pill hi">ECS Fargate</span>
+      <span class="pill hi">IAM</span>
+      <span class="pill hi">KMS (CMK)</span>
+      <span class="pill hi">CloudWatch</span>
+      <span class="pill hi">CloudTrail</span>
+      <span class="pill hi">ALB</span>
+      <span class="pill hi">VPC</span>
+      <span class="pill hi">GitHub Actions · OIDC</span>
+      <span class="pill">Docker / ECR</span>
+      <span class="pill">AWS Backup</span>
+      <span class="pill">SNS</span>
+      <span class="pill">DynamoDB</span>
+      <span class="pill">PowerShell</span>
+      <span class="pill">Stanford ML</span>
+      <span class="pill">SANS ICS310</span>
+      <span class="pill">Fordham University</span>
     </div>
   </div>
 </div>
 
 <!-- ABOUT -->
-<section id="about">
-  <p class="section-label">// 01 · Background</p>
-  <div class="about-grid">
-    <div>
-      <h2 class="section-title">Built from the ground up. Proven at enterprise scale.</h2>
-      <div class="about-copy">
-        <p>
-          Started at the help desk. Ended up closing pen test findings, hardening PKI infrastructure,
-          and building automation that replaced hours of manual admin work.
-        </p>
-        <p>
-          <strong>Fordham University graduate. NCAA Division I scholarship athlete. Former Wall Street recruiter.</strong>
-          I know how to compete in high-pressure environments and I know how to close.
-        </p>
-        <p>
-          The SANS ICS310 certification came in March 2026 — adding industrial control system
-          security to a stack already covering endpoint, identity, and vulnerability domains.
-          The Stanford ML cert isn't a hobby — it's how I think about detection patterns at scale.
-        </p>
-        <p>
-          This background doesn't follow a traditional path.
-          I built the home lab from a YouTube video that unlocked more than years of passive team learning.
-          I understood healthcare's attack surface from the inside. That's not the same as reading about it.
-        </p>
+<div class="section" id="about">
+  <div class="container">
+    <p class="section-label">// 01 · Background</p>
+    <div class="about-grid">
+      <div>
+        <h2 class="section-title">Built from the ground up.<br>Deployed. Running. Proven.</h2>
+        <div class="about-copy">
+          <p>
+            Long before generative AI became mainstream, I was planning a path into machine learning.
+            I ended up in enterprise IT and healthcare security instead — and each stop made me a better
+            infrastructure thinker than any shortcut would have.
+          </p>
+          <p>
+            <strong>Former Wall Street recruiter.</strong> I know how companies hire and what they actually need
+            behind a job description. That perspective shapes how I build — for operational reality, not demos.
+          </p>
+          <p>
+            I built my AWS stack AI-first. Claude Code read the codebase, wrote modules, ran validations,
+            and helped reason through architecture decisions. That is not replacing engineering judgment.
+            That is multiplying it.
+          </p>
+          <p>
+            My belief: traditional roles will not be replaced by AI. They will be replaced by people
+            who know how to operate AI. I am building that workflow now — in production.
+          </p>
+        </div>
+      </div>
+      <div class="origin-card">
+        <p class="origin-card-label">// Career Arc</p>
+        <ul class="origin-list">
+          <li><strong>Mason Frank International</strong> — Wall Street, NYC. Technical recruiter. Learned how organizations hire and what they actually need behind a job description.</li>
+          <li><strong>Blue Cross Blue Shield Assoc.</strong> — Enterprise IT in a compliance-heavy, regulated environment. Foundation in operational discipline.</li>
+          <li><strong>McLeod Health (2024–Present)</strong> — Security Remediation Analyst. 13,000-endpoint HIPAA-regulated healthcare environment. Vulnerability management, identity controls, PowerShell automation.</li>
+          <li><strong>AWS Small Business Secure Stack</strong> — Fully deployed, production-safe AWS foundation. Terraform IaC. 18+ modules. Live in us-east-1. April 2026.</li>
+        </ul>
       </div>
     </div>
-    <div class="origin-card">
-      <p class="origin-card-label">// Career Arc</p>
-      <ul class="origin-list">
-        <li><strong>Mason Frank International</strong> — Wall Street, New York. Technical recruiter. Learned how companies hire, what they actually need, and how to read a role before applying.</li>
-        <li><strong>Blue Cross Blue Shield Association</strong> — Health insurance enterprise. IT foundation in regulated, compliance-heavy infrastructure.</li>
-        <li><strong>McLeod Health (2024–Present)</strong> — Security Remediation Analyst. 13,000-endpoint healthcare enterprise. Vulnerability management, endpoint hardening, PKI remediation, PowerShell automation. HIPAA-regulated from day one.</li>
-        <li><strong>SANS ICS310 (March 2026)</strong> — Certified in ICS/OT security. Added critical infrastructure to the domain map.</li>
-      </ul>
-    </div>
   </div>
-</section>
+</div>
 
 <!-- CAPABILITIES -->
-<div class="caps-section">
-  <section id="capabilities" style="max-width: 1100px; margin: 0 auto;">
+<div class="section section-alt" id="capabilities">
+  <div class="container">
     <p class="section-label">// 02 · Core Capabilities</p>
-    <h2 class="section-title">Three domains. All enterprise-grade.</h2>
+    <h2 class="section-title">Three domains. All production-grade.</h2>
     <div class="caps-grid">
       <div class="cap-card">
         <div class="cap-icon">⬡</div>
-        <p class="cap-title">Vulnerability & Remediation Engineering</p>
-        <p class="cap-desc">Closed penetration test findings in a HIPAA-regulated environment. Managed scan pipelines, prioritized remediation across 13,000 endpoints, and tracked closure to audit readiness.</p>
-        <div class="cap-tools">
-          <span class="tool-tag">Tenable/Nessus</span>
-          <span class="tool-tag">CrowdStrike</span>
-          <span class="tool-tag">Microsoft Defender</span>
-          <span class="tool-tag">ServiceNow</span>
+        <p class="cap-title">AWS Infrastructure Engineering</p>
+        <p class="cap-desc">Designed and deployed a full-stack AWS environment using Terraform IaC. Multi-AZ VPC, private subnets, ECS Fargate compute, ALB at the edge, VPC endpoints instead of NAT. No long-lived IAM keys anywhere.</p>
+        <div class="tool-tags">
+          <span class="tool-tag">Terraform</span>
+          <span class="tool-tag">ECS Fargate</span>
+          <span class="tool-tag">VPC</span>
+          <span class="tool-tag">ALB</span>
+          <span class="tool-tag">ECR</span>
         </div>
       </div>
       <div class="cap-card">
         <div class="cap-icon">◈</div>
-        <p class="cap-title">Endpoint Security & Hardening</p>
-        <p class="cap-desc">Managed endpoint fleets at scale. Built remediation workflows, automated cache cleanup and maintenance, deployed configurations via MDM. Reduced manual workload and improved consistency.</p>
-        <div class="cap-tools">
-          <span class="tool-tag">Microsoft Intune</span>
-          <span class="tool-tag">MECM/SCCM</span>
-          <span class="tool-tag">PowerShell</span>
-          <span class="tool-tag">CrowdStrike Falcon</span>
+        <p class="cap-title">Secure-by-Design Architecture</p>
+        <p class="cap-desc">Customer-managed KMS encryption across every service. CloudTrail with tamper detection. Least-privilege IAM throughout. Tag-based automated backup. Five CloudWatch alarms. GitHub Actions CI/CD with OIDC — no stored credentials.</p>
+        <div class="tool-tags">
+          <span class="tool-tag">IAM</span>
+          <span class="tool-tag">KMS (CMK)</span>
+          <span class="tool-tag">CloudTrail</span>
+          <span class="tool-tag">AWS Backup</span>
+          <span class="tool-tag">OIDC</span>
         </div>
       </div>
       <div class="cap-card">
         <div class="cap-icon">◎</div>
-        <p class="cap-title">Identity, Active Directory & Automation</p>
-        <p class="cap-desc">Automated user provisioning, group assignments, and AD object management. Led the 2026 PKI Risk Remediation Initiative — hardening enrollment controls, auditing trust dependencies, and establishing drift prevention.</p>
-        <div class="cap-tools">
-          <span class="tool-tag">Azure AD / Entra ID</span>
-          <span class="tool-tag">Active Directory</span>
+        <p class="cap-title">AI Operator Workflow</p>
+        <p class="cap-desc">Built this stack using Claude Code as an AI operator — planning before changes, validation after every edit, documented tradeoffs for every architectural decision. Faster delivery, higher quality, reproducible results.</p>
+        <div class="tool-tags">
+          <span class="tool-tag">Claude Code</span>
+          <span class="tool-tag">GitHub Actions</span>
+          <span class="tool-tag">Terraform CI/CD</span>
           <span class="tool-tag">PowerShell</span>
-          <span class="tool-tag">PKI / Certificates</span>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </div>
 
 <!-- PROJECTS -->
-<section id="projects" style="max-width: 1100px; margin: 0 auto;">
-  <p class="section-label">// 03 · Public Work</p>
-  <h2 class="section-title">Real problems. Production solutions.</h2>
-  <div class="projects-grid">
-    <a href="https://github.com/erikjmccauley-ctrl/enterprise-it-automation-scripts" target="_blank" class="project-card">
-      <p class="project-tag">// GitHub · PowerShell</p>
-      <h3 class="project-title">Enterprise IT & Security Automation Scripts</h3>
-      <p class="project-desc">A production-tested collection of PowerShell scripts covering the full enterprise IT stack — identity, endpoint, and network infrastructure.</p>
-      <ul class="project-bullets">
-        <li>Automated user provisioning, group assignment, and AD object management</li>
-        <li>Endpoint remediation workflows: cache cleanup, remote restart, maintenance</li>
-        <li>DHCP and DNS tooling for IP resolution, scope identification, and troubleshooting</li>
-        <li>Built to reduce manual administrative effort in real enterprise environments</li>
-      </ul>
-    </a>
-    <div class="project-card" style="cursor: default;">
-      <p class="project-tag">// McLeod Health · Oct 2025</p>
-      <h3 class="project-title">2026 Security Hardening & PKI Risk Remediation Initiative</h3>
-      <p class="project-desc">Cross-functional initiative following a formal security assessment. Partnered with security and infrastructure teams to close enterprise-level identity and certificate risk.</p>
-      <ul class="project-bullets">
-        <li>Implemented hardened enrollment controls on certificate services</li>
-        <li>Audited cryptographic trust dependencies across critical systems</li>
-        <li>Validated remediation effectiveness post-implementation</li>
-        <li>Established governance processes to prevent configuration drift</li>
-        <li>Significantly reduced enterprise privilege escalation risk</li>
-      </ul>
+<div class="section" id="projects">
+  <div class="container">
+    <p class="section-label">// 03 · Public Work</p>
+    <h2 class="section-title">Real infrastructure. Deployed and live.</h2>
+    <div class="projects-grid">
+      <a href="https://github.com/erikjmccauley-ctrl/AWS-Small-Business-Secure-Stack" target="_blank" class="project-card clickable">
+        <p class="project-tag">// GitHub · Terraform · AWS · Live in us-east-1</p>
+        <h3 class="project-title">AWS Small Business Secure Stack</h3>
+        <p class="project-desc">A fully deployed, production-safe AWS foundation built in Terraform. Designed to give small businesses an enterprise-grade cloud environment at a fraction of the cost.</p>
+        <ul class="project-bullets">
+          <li>Multi-AZ VPC · ECS Fargate in private subnets · ALB at edge</li>
+          <li>Customer-managed KMS · CloudTrail tamper detection · 5 CloudWatch alarms</li>
+          <li>No NAT gateway — VPC endpoints for better security and comparable cost</li>
+          <li>GitHub Actions CI/CD with OIDC · no long-lived IAM keys</li>
+          <li>$74–86/month total · budget alerts at 50/80/100%</li>
+        </ul>
+      </a>
+      <div class="project-card">
+        <p class="project-tag">// Enterprise · PowerShell · 100+ Scripts</p>
+        <h3 class="project-title">Enterprise IT & Security Automation</h3>
+        <p class="project-desc">Production-tested PowerShell automation covering the full enterprise IT stack — identity, endpoint hardening, and network infrastructure — built for a 13,000-endpoint HIPAA environment.</p>
+        <ul class="project-bullets">
+          <li>User provisioning, AD object management, group assignment automation</li>
+          <li>Endpoint remediation workflows: cache cleanup, remote restart, maintenance</li>
+          <li>DHCP and DNS tooling for IP resolution and scope troubleshooting</li>
+          <li>Led PKI Risk Remediation Initiative — hardened enrollment controls, closed privilege escalation risk</li>
+        </ul>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
 <!-- TARGET ROLES -->
-<div class="roles-section">
-  <section style="max-width: 1100px; margin: 0 auto;">
+<div class="section section-alt">
+  <div class="container">
     <p class="section-label">// 04 · Open To</p>
-    <h2 class="section-title" style="margin-bottom: 40px;">Target roles & industries</h2>
-    <div class="roles-inner">
-      <div class="roles-col">
+    <h2 class="section-title">Target roles &amp; requirements</h2>
+    <div class="roles-grid">
+      <div>
         <p class="roles-col-label">Roles</p>
         <ul class="roles-list">
-          <li><span>→</span> Vulnerability Engineer</li>
-          <li><span>→</span> Endpoint Security Engineer</li>
-          <li><span>→</span> Security Remediation Engineer</li>
-          <li><span>→</span> IT Security Analyst</li>
-          <li><span>→</span> SOC Analyst Tier 2</li>
+          <li><span>→</span> AWS Cloud Engineer</li>
+          <li><span>→</span> Cloud Infrastructure Engineer</li>
+          <li><span>→</span> Cloud Solutions Architect</li>
+          <li><span>→</span> AI Solutions Engineer</li>
+          <li><span>→</span> Cloud Operations Engineer</li>
         </ul>
       </div>
-      <div class="roles-col">
+      <div>
         <p class="roles-col-label">Industries</p>
         <ul class="roles-list">
+          <li><span>→</span> Technology / SaaS</li>
           <li><span>→</span> Healthcare</li>
-          <li><span>→</span> Finance / Banking</li>
+          <li><span>→</span> Finance / Fintech</li>
           <li><span>→</span> Federal / Government</li>
-          <li><span>→</span> Defense / Military Contractors</li>
-          <li><span>→</span> Critical Infrastructure</li>
-          <li><span>→</span> Technology</li>
+          <li><span>→</span> Defense / Contractors</li>
         </ul>
       </div>
-      <div class="roles-col">
+      <div>
         <p class="roles-col-label">Requirements</p>
         <ul class="roles-list">
           <li><span>✓</span> Remote-first or fully remote</li>
-          <li><span>✓</span> $120,000+ compensation</li>
+          <li><span>✓</span> $120,000+ base salary</li>
           <li><span>✓</span> Available immediately</li>
           <li><span>✓</span> Fast responder</li>
         </ul>
       </div>
     </div>
-  </section>
+  </div>
 </div>
 
-<!-- CTA -->
-<div id="contact">
-  <div class="cta-section">
-    <p class="cta-label">// 05 · Let's Connect</p>
-    <h2>Sourcing security talent?<br>Let's talk.</h2>
-    <p>Fast responder. Currently available. Open to immediate conversations and interviews.</p>
-    <div class="contact-links">
-      <a href="https://www.linkedin.com/in/erikjmccauley/" target="_blank" class="contact-link primary">LinkedIn Profile ↗</a>
-      <a href="https://github.com/erikjmccauley-ctrl" target="_blank" class="contact-link">GitHub ↗</a>
-      <a href="mailto:erikjmccauley@gmail.com" class="contact-link">Email ↗</a>
+<!-- DUAL CTA -->
+<div class="cta-section" id="contact">
+  <div class="container">
+    <p class="section-label">// 05 · Let's Connect</p>
+    <div class="cta-grid">
+      <div class="cta-card primary-card">
+        <p class="cta-card-label">// For Small Business Owners</p>
+        <h3>Need AWS infrastructure without the enterprise price tag?</h3>
+        <p>I build secure, cost-optimized AWS foundations that do not require a $300/hour consultant or a 6-month runway. Let's talk about what you actually need.</p>
+        <div class="contact-links">
+          <a href="mailto:erikjmccauley@gmail.com" class="contact-link green">→ Email Me</a>
+          <a href="https://www.linkedin.com/in/erikjmccauley/" target="_blank" class="contact-link">LinkedIn ↗</a>
+        </div>
+      </div>
+      <div class="cta-card">
+        <p class="cta-card-label">// For Recruiters &amp; Hiring Managers</p>
+        <h3>Sourcing cloud engineering talent?</h3>
+        <p>Remote AWS Cloud Engineer. $120K+. Fast responder. Available immediately. Proven infrastructure — not a project on a slide deck.</p>
+        <div class="contact-links">
+          <a href="https://www.linkedin.com/in/erikjmccauley/" target="_blank" class="contact-link green">LinkedIn ↗</a>
+          <a href="https://github.com/erikjmccauley-ctrl/AWS-Small-Business-Secure-Stack" target="_blank" class="contact-link">View Stack ↗</a>
+          <a href="mailto:erikjmccauley@gmail.com" class="contact-link">Email ↗</a>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- FOOTER -->
 <footer>
-  <span>Erik J. McCauley · Security Engineer · Remote</span>
-  <div style="display: flex; gap: 24px;">
-    <a href="https://github.com/erikjmccauley-ctrl" target="_blank">GitHub</a>
-    <a href="https://www.linkedin.com/in/erikjmccauley/" target="_blank">Lin
+  <div class="container" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <span>Erik J. McCauley · AWS Cloud Engineer · Remote</span>
+    <div class="footer-links">
+      <a href="https://github.com/erikjmccauley-ctrl" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/erikjmccauley/" target="_blank">LinkedIn</a>
+      <a href="mailto:erikjmccauley@gmail.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const toggle = document.getElementById('navToggle');
+  const drawer = document.getElementById('navDrawer');
+  toggle.addEventListener('click', () => {
+    toggle.classList.toggle('open');
+    drawer.classList.toggle('open');
+  });
+  document.querySelectorAll('.drawer-link').forEach(link => {
+    link.addEventListener('click', () => {
+      toggle.classList.remove('open');
+      drawer.classList.remove('open');
+    });
+  });
+</script>
+
+</body>
+</html>
