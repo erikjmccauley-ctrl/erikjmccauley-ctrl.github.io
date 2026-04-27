@@ -2,7 +2,7 @@
 
 Personal site and recruiter brief hosted via GitHub Pages.
 
-**Live:** [erikjmccauley-ctrl.github.io](https://erikjmccauley-ctrl.github.io)
+**Live:** [erikjmccauley-ctrl.github.io](https://erikjmccauley-ctrl.github.io/.github.io/)
 
 ---
 
